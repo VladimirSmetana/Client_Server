@@ -2,6 +2,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <string.h>
+#include <chrono>
 
 int main() {
     int server_fd, new_socket;
@@ -47,11 +48,14 @@ int main() {
         std::cout << "Подключение установлено!" << std::endl;
 
         // Отправляем сообщение клиенту
+        auto start = std::chrono::high_resolution_clock::now();
+        
         const char *message = "Hello from server!";
         send(new_socket, message, strlen(message), 0);
         
         close(new_socket); // Закрываем соединение после обработки
     }
 
+    //thread_local ?? 
     return 0;
 }
