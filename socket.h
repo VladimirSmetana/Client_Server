@@ -15,22 +15,25 @@
 
 class Socket
 {
-public:
-    explicit Socket(int port_number) : port(port_number)
-    {
-        init_socket();
-    }
+protected:
     int server_fd;
     int port;
 
-    int create_and_bind_socket();
-    void listen_connect();
-    int accept_socket();
-    int init_socket();
+public:
+    Socket(int port) : port(port), server_fd(-1) {}
 
-    virtual void send_data(int new_socket){};
-    ~Socket()
+    virtual ~Socket()
     {
-        close(server_fd);
+        if (server_fd >= 0)
+        {
+            close(server_fd);
+        }
     }
+
+    int init_socket();
+    int create_and_bind_socket();
+    virtual void send_data(int new_socket) {};
+    void listen_connect();
+
+    int accept_socket();
 };

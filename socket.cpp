@@ -64,6 +64,7 @@ int Socket::accept_socket()
     return new_socket;
 }
 int server_fd;
+
 int Socket::init_socket()
 {
     int server_fd = create_and_bind_socket();

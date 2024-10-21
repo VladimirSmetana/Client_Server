@@ -9,6 +9,7 @@
 #include <semaphore.h>
 #include <thread>
 #include "server.h"
+#include <vector>
 
 void Server::send_data(int new_socket)
 {
@@ -40,6 +41,12 @@ int Server::getcurtime(char *buffer, size_t bufferSize)
     return 0;
 }
 
+void handle_client(Server &server, int new_socket)
+{
+    server.send_data(new_socket);
+    close(new_socket); // Закрываем соединение после обработки
+}
+
 int main(int argc, char *argv[])
 {
     if (argc != 2)
@@ -49,15 +56,27 @@ int main(int argc, char *argv[])
     }
 
     Server S(atoi(argv[1]));
+    S.init_socket();
+    std::vector<std::thread> threads;
 
     while (true)
     {
         int new_socket = S.accept_socket();
         if (new_socket >= 0)
         {
-            S.send_data(new_socket);
-            close(new_socket); // Закрываем соединение после обработки
+            // Создаем новый поток для обработки клиента
+            threads.emplace_back(handle_client, std::ref(S), new_socket);
         }
     }
+
+    // Ожидание завершения всех потоков (не достигнет этого из-за бесконечного цикла выше)
+    for (auto &thread : threads)
+    {
+        if (thread.joinable())
+        {
+            thread.join();
+        }
+    }
+
     return 0;
 }
