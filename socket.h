@@ -16,11 +16,11 @@
 class Socket
 {
 protected:
-    int server_fd;
     int port;
+    int server_fd;
 
 public:
-    Socket(int port) : port(port), server_fd(-1) {}
+    explicit Socket(int port) : port(port), server_fd(-1) {}
 
     virtual ~Socket()
     {

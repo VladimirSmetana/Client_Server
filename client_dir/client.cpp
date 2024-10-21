@@ -9,7 +9,7 @@ bool Client ::connectToServer()
 
 void Client ::readFromServer(const std::string &log_file, const std::string &thrname)
 {
-    std::ofstream file(log_file, std::ios::app); // Открываем файл в режиме добавления
+    std::ofstream file(log_file, std::ios::app);
     if (!file.is_open())
     {
         throw std::runtime_error("Не удалось открыть файл для записи");
@@ -30,7 +30,7 @@ void Client ::readFromServer(const std::string &log_file, const std::string &thr
             break;
         }
 
-        buffer[bytes_read] = '0'; // Завершаем строку нулевым символом
+        buffer[bytes_read] = '0';
 
         {
             std::lock_guard<std::mutex> lock(file_mutex);
@@ -39,7 +39,7 @@ void Client ::readFromServer(const std::string &log_file, const std::string &thr
         }
     }
 
-    file.close(); // Закрываем файл
+    file.close();
 }
 
 int main(int argc, char *argv[])

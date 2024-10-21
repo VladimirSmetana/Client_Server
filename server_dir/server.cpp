@@ -17,7 +17,7 @@ void Server::send_data(int new_socket)
 
     while (true)
     {
-        getcurtime(buffer, sizeof(buffer)); // Передаем размер буфера
+        getcurtime(buffer, sizeof(buffer));
         send(new_socket, buffer, strlen(buffer), 0);
         sleep(1);
     }
@@ -28,23 +28,20 @@ int Server::getcurtime(char *buffer, size_t bufferSize)
     struct timeval tv;
     gettimeofday(&tv, NULL);
 
-    // Получаем текущее время
     time_t rawtime = tv.tv_sec;
     struct tm *timeinfo = localtime(&rawtime);
     strftime(buffer, bufferSize, "%Y-%m-%d %H:%M:%S", timeinfo);
 
-    // Добавляем миллисекунды
     snprintf(buffer + strlen(buffer), bufferSize - strlen(buffer), ".%03ld", tv.tv_usec / 1000);
 
-    // Выводим результат
-    puts(buffer); // Правильное использование puts
+    puts(buffer);
     return 0;
 }
 
 void handle_client(Server &server, int new_socket)
 {
     server.send_data(new_socket);
-    close(new_socket); // Закрываем соединение после обработки
+    close(new_socket);
 }
 
 int main(int argc, char *argv[])
@@ -64,12 +61,10 @@ int main(int argc, char *argv[])
         int new_socket = S.accept_socket();
         if (new_socket >= 0)
         {
-            // Создаем новый поток для обработки клиента
             threads.emplace_back(handle_client, std::ref(S), new_socket);
         }
     }
 
-    // Ожидание завершения всех потоков (не достигнет этого из-за бесконечного цикла выше)
     for (auto &thread : threads)
     {
         if (thread.joinable())

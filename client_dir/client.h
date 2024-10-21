@@ -15,7 +15,7 @@ private:
     std::mutex file_mutex;
 
 public:
-    Client(const std::string &server_ip, int port) : Socket(port)
+    explicit Client(const std::string &server_ip, int port) : Socket(port)
     {
         sock = socket(AF_INET, SOCK_STREAM, 0);
         if (sock < 0)
